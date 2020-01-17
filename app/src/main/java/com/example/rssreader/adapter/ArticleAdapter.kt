@@ -1,19 +1,23 @@
 package com.example.rssreader.adapter
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.example.rssreader.R
+import com.example.rssreader.loader.ArtilceLoader
 import com.example.rssreader.models.Article
-import kotlinx.android.synthetic.main.activity_main.view.*
-import org.w3c.dom.Text
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+
+
 
 class ArticleAdapter : RecyclerView.Adapter<ArticleAdapter.ViewHolder>() {
-    val articles: MutableList<Article> = mutableListOf()
+    private val articles: MutableList<Article> = mutableListOf()
+    private lateinit var loader: ArtilceLoader
+    private var loading = false
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -37,10 +41,26 @@ class ArticleAdapter : RecyclerView.Adapter<ArticleAdapter.ViewHolder>() {
         holder.feed.text = singleArticle.feed
         holder.title.text = singleArticle.title
         holder.summary.text = singleArticle.summary
+        if(!loading && position >= articles.size -2 ){
+            CoroutineScope(Dispatchers.Main).launch{
+                loader.loadMore()
+                loading = false
+            }
+        }
     }
 
     fun add(articles: List<Article>){
         this.articles.addAll(articles)
+        notifyDataSetChanged()
+    }
+
+    fun add(article: Article){
+        this.articles.add(article)
+        notifyDataSetChanged()
+    }
+
+    fun clear(){
+        this.articles.clear()
         notifyDataSetChanged()
     }
 
