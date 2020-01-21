@@ -25,11 +25,19 @@
         app:layout_constraintStart_toEndOf="@+id/searchText"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:scrollbars="vertical"
-        android:id="@+id/articles"
+    <TextView
+        android:id="@+id/results"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@id/articles"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/searchButton" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/articles"
         android:layout_width="match_parent"
-        app:layout_constraintTop_toBottomOf="@id/searchText"
-        />
+        android:layout_height="wrap_content"
+        android:scrollbars="vertical"
+        app:layout_constraintTop_toBottomOf="@id/results" />
 </androidx.constraintlayout.widget.ConstraintLayout>
