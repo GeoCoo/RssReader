@@ -3,6 +3,7 @@ package com.example.rssreader.view
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
+import android.widget.EditText
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.rssreader.R
@@ -17,12 +18,11 @@ import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.launch
 
 class SearchActivity : AppCompatActivity() {
+    private val searcher = Searcher()
 
-
-    private lateinit var articlesRecycler: RecyclerView
+    private lateinit var articles: RecyclerView
     private lateinit var viewAdapter: ArticleAdapter
     private lateinit var viewManager: RecyclerView.LayoutManager
-    private val searcher = Searcher()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,29 +30,32 @@ class SearchActivity : AppCompatActivity() {
 
         viewManager = LinearLayoutManager(this)
         viewAdapter = ArticleAdapter()
-        articlesRecycler.apply {
+        articles = findViewById<RecyclerView>(R.id.articles).apply {
             layoutManager = viewManager
             adapter = viewAdapter
         }
 
         findViewById<Button>(R.id.searchButton).setOnClickListener {
             viewAdapter.clear()
-            CoroutineScope(Dispatchers.Main).launch {
+            CoroutineScope(Dispatchers.IO).launch {
                 search()
             }
         }
-    }
 
+    }
 
     private suspend fun search() {
-        val query = searchText.text.toString()
+        val query = findViewById<EditText>(R.id.searchText)
+            .text.toString()
+
         val channel = searcher.search(query)
-        while (!channel.isClosedForReceive){
-            val articles = channel.receive()
-            viewAdapter.add(articles)
+
+        while (!channel.isClosedForReceive) {
+            val article = channel.receive()
+
+            CoroutineScope(Dispatchers.Main).launch {
+                viewAdapter.add(article)
+            }
         }
-
     }
-
-
 }

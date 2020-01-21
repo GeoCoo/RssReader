@@ -17,7 +17,7 @@ import kotlinx.coroutines.launch
 class ArticleAdapter : RecyclerView.Adapter<ArticleAdapter.ViewHolder>() {
     private val articles: MutableList<Article> = mutableListOf()
     private lateinit var loader: ArtilceLoader
-    private var loading = false
+//    private var loading = false
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -41,12 +41,12 @@ class ArticleAdapter : RecyclerView.Adapter<ArticleAdapter.ViewHolder>() {
         holder.feed.text = singleArticle.feed
         holder.title.text = singleArticle.title
         holder.summary.text = singleArticle.summary
-        if(!loading && position >= articles.size -2 ){
-            CoroutineScope(Dispatchers.Main).launch{
-                loader.loadMore()
-                loading = false
-            }
-        }
+//        if(!loading && position >= articles.size -2 ){
+//            CoroutineScope(Dispatchers.Main).launch{
+//                loader.loadMore()
+//                loading = false
+//            }
+//        }
     }
 
     fun add(articles: List<Article>){
@@ -66,7 +66,7 @@ class ArticleAdapter : RecyclerView.Adapter<ArticleAdapter.ViewHolder>() {
 
 
     class ViewHolder(
-        val layout: ConstraintLayout,
+        layout: ConstraintLayout,
         val feed: TextView,
         val title: TextView,
         val summary: TextView
